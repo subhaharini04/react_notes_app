@@ -4,6 +4,8 @@ import './App.css'
 function App() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [editingIndex, setEditingIndex] = useState(null);
+
   const [notes, setNotes] = useState(() => {
     const saved = localStorage.getItem("notes");
     return saved ? JSON.parse(saved) : [];
@@ -18,8 +20,16 @@ function App() {
       alert("Title and content cannot be empty");
       return;
     }
+    if(editingIndex !== null){
+      const updatedNotes =notes.map((note, i)=>
+      i === editingIndex ? { title, content } : note
+    );
+    setNotes(updatedNotes);
+    setEditingIndex(null);
+    }else{
     const newNote = { title, content };
     setNotes([...notes, newNote]);
+    }
     setTitle("");
     setContent("");
     console.log("Note added:", newNote);
@@ -27,13 +37,6 @@ function App() {
 
   const deleteNote = (index) => {
     setNotes(notes.filter((_, i) => i !== index));
-  }
-
-  const editNote = (index, newTitle, newContent) => {
-    const updatedNotes = notes.map((note, i) =>
-      i === index ? { title: newTitle, content: newContent } : note
-    );
-    setNotes(updatedNotes);
   }
 
   return (
@@ -52,7 +55,8 @@ function App() {
         placeholder='Enter content here' />
 
       <button
-        onClick={addNote}>Add Note
+        onClick={addNote}>
+          {editingIndex !== null ? "Update Note" : "Add Note"}
       </button>
 
       <div>
@@ -65,6 +69,13 @@ function App() {
               <h3>{note.title}</h3>
               <p>{note.content}</p>
               <button onClick={() => deleteNote(index)}>Delete</button>
+              <button onClick={() => {
+                setEditingIndex(index);
+                setTitle(note.title);
+                setContent(note.content);
+              }}>
+                Edit
+              </button>
             </div>
           ))
         )}
