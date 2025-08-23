@@ -1,21 +1,22 @@
 import { Link } from 'react-router-dom';
 import { useNotes } from '../context/NotesContext';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import {FaPlus} from "react-icons/fa";
 
 export const NoteList = () => {
   const navigate = useNavigate();
   const{notes, deleteNote}=useNotes();
   return (
-    <div> 
-        <div>
-            <h1>Notes</h1>
-            <button onClick={() => navigate("/add")}>Add Note</button>
+    <div className='flex'> 
+        <div className='border-r border-gray-300 h-screen p-6 pt-20'>
+          <button className='bg-black text-white p-2 rounded-full cursor-pointer ' onClick={() => navigate("/add")}><FaPlus /></button>
         </div>
         <div>
-        <h2>Note History</h2>
+        <div className='p-4 flex-col'>
+            <h1 className='pt-14 text-5xl font-bold'>Notes</h1>
+        <div className='p-5 pt-10'>
         {notes.length === 0 ? (
-          <p> No Notes Yet</p>
+          <p className='text-center'> No Notes Yet</p>
         ) : (
           notes.map((note, index) => (
             <div key={index} className=' p-2 my-2 rounded' style={{ backgroundColor: note.color }}>
@@ -31,5 +32,8 @@ export const NoteList = () => {
         )}
       </div>
       </div>
+      </div>
+              </div>
+
   )
 }
